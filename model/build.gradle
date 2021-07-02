@@ -4,3 +4,12 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/7.1/samples
  */
+plugins {
+    // Smithy Gradle plugin to build Smithy model
+    id "software.amazon.smithy" version "0.5.3"
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies and plugins.
+    mavenCentral()
+}
