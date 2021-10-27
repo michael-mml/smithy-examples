@@ -25,6 +25,20 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:30.1-jre'
+
+    // This dependency is required for implementing custom transformations using the Smithy interfaces.
+    implementation 'software.amazon.smithy:smithy-build:1.8.0'
+    // This dependency is required for implementing custom traits using the Smithy interfaces.
+    implementation 'software.amazon.smithy:smithy-model:1.8.0'
+
+    // This dependency is required for the annotations to auto-generate Java SPI configuration files.
+    implementation 'com.google.auto.service:auto-service:1.0'
+    // This dependency is required to auto-generate Java SPI configuration files to interact with Smithy service factories; without this annotationProcessor, generated files will not be created.
+    // https://stackoverflow.com/a/57098217
+    // http://dplatz.de/blog/2018/gradle-apt.html
+    // https://stackoverflow.com/a/56511065
+    // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_compile_avoidance
+    annotationProcessor 'com.google.auto.service:auto-service:1.0'
 }
 
 tasks.named('test') {

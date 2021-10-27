@@ -2,6 +2,9 @@ $version: "1.0"
 
 namespace smithy.examples.main
 
+// import traits from traits namespace
+use smithy.examples.traits#copy
+
 /// Represents the response for numeric data
 /// data - the data to be sent in the response
 ///
@@ -28,5 +31,8 @@ list DoubleList {
 }
 
 structure SomeStruct {
+    @copy(
+        newShapeName: "AnotherStruct"
+    )
     originalField: String
 }

@@ -13,3 +13,10 @@ repositories {
     // Use Maven Central for resolving dependencies and plugins.
     mavenCentral()
 }
+
+dependencies {
+    // Add lib as a project dependency for resolving custom traits and transformations via Java SPI.
+    // https://docs.gradle.org/current/userguide/declaring_dependencies.html#sub:project_dependencies
+    // TODO: Enable type-safe project dependency: https://docs.gradle.org/current/userguide/declaring_dependencies.html#sec:type-safe-project-accessors
+    implementation project(":lib")
+}
