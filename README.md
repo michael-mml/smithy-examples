@@ -1,4 +1,4 @@
-# Smithy Trait Examples
+# Smithy Examples
 
 This [Gradle multi-project]((https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:creating_multi_project_builds)) was created by:
 

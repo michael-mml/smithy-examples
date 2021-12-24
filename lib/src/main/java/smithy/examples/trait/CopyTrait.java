@@ -1,4 +1,4 @@
-package smithy.trait.examples.traits;
+package smithy.examples.trait;
 
 import com.google.auto.service.AutoService;
 import software.amazon.smithy.model.node.Node;

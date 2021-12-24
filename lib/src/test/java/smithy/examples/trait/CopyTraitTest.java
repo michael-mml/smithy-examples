@@ -1,4 +1,4 @@
-package smithy.trait.examples.traits;
+package smithy.examples.trait;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
