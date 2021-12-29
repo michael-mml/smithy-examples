@@ -1,0 +1,60 @@
+---
+smithy: 1.0
+shapes:
+    smithy.examples.main#DoubleList:
+        type: list
+        member:
+            target: smithy.api#Double
+    smithy.examples.main#IntegerList:
+        type: list
+        member:
+            target: smithy.api#Integer
+    smithy.examples.main#Number:
+        type: union
+        members:
+            double:
+                target: smithy.api#Double
+            integer:
+                target: smithy.api#Integer
+            doubleList:
+                target: smithy.examples.main#DoubleList
+            integerList:
+                target: smithy.examples.main#IntegerList
+        traits:
+            smithy.api#documentation: "Unions must be tagged, resulting in a extra layer of indirection"
+
+    smithy.examples.main#NumericResponse:
+        type: structure
+        member:
+            target: smithy.examples.main#Number
+            traits:
+                smithy.api#required:
+        traits:
+            smithy.api#documentation: "Represents the response for numeric data\ndata - the data to be sent in the response\n\nExample: { data: { double: 1 } }"
+
+    smithy.examples.main#SomeStruct:
+        type: structure
+        member:
+            target: smithy.api#String
+            traits:
+                smithy.examples.traits#copy:
+                    newShapeName: "AnotherStruct"
+
+    smithy.examples.traits#copy:
+        type: structure
+        members:
+            newShapeName:
+                target: smithy.api#String
+            newMemberName:
+                target: smithy.api#String
+            newType:
+                target: smithy.api#String
+                traits:
+                    smithy.api#idRef:
+                        selector: ":test(string, double, integer, [id = smithy.examples#IntegerList], [id = smithy.examples#DoubleList])"
+
+        traits:
+            smithy.api#documentation: "A structured trait that allows copying a shape's member to a new shape.\n\nnewShapeName - the name of the new shape to add to the Smithy model\nnewMemberName - the new name of the member\nnewType - the new type of the member, after a transformation\n\nExample: @copy(newShapeName: \"MyNewShapeName\", type: \"IntegerList\")"
+
+            smithy.api#trait:
+                selector: "structure > member"

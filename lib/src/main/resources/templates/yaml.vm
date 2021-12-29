@@ -1,0 +1,70 @@
+#macro(recursivelyParseNode $node, $indentation)
+## base case: string or number or boolean or null
+#set($nodeType = $node.getType())
+#if($nodeType == "string")
+## convert multi-line string to single line and escape double quotes
+"$node.expectStringNode().toString().replaceAll("[\n\t]", "\\n").replace('"', '\"')"
+#elseif($nodeType == "number")
+$node.expectNumberNode()
+#elseif($nodeType == "boolean")
+$node.expectBooleanNode()
+#elseif($nodeType == "null")
+$node.expectNullNode()
+## recursive case: array or object node
+#elseif($nodeType == "array")
+#foreach($element in $node.expectArrayNode())
+#recursivelyParseNode($element)
+#end
+#elseif($nodeType == "object")
+#set($stringNodeToNodeSet = $node.expectObjectNode().getMembers().entrySet())
+#foreach($stringNodeToNode in $stringNodeToNodeSet)
+## object nodes require additional indentation of 4 spaces for proper alignment
+
+    $indentation$stringNodeToNode.getKey(): #recursivelyParseNode($stringNodeToNode.getValue())
+#end
+#end
+#end
+---
+smithy: 1.0
+shapes:
+#foreach($shape in $shapes)
+    $shape.getId():
+        type: $shape.getType()
+## set members of the shape
+#set($memberShapesCollection = $shape.members())
+#set($isAggregateShape = $memberShapesCollection.size() != 1)
+#if($isAggregateShape)
+        members:
+#foreach($memberShape in $memberShapesCollection)
+            $memberShape.getMemberName():
+                target: $memberShape.getTarget()
+#set($traitShapeIdToTraitSet = $memberShape.getAllTraits().entrySet())
+#if($traitShapeIdToTraitSet)
+                traits:
+#foreach($traitShapeIdToTrait in $traitShapeIdToTraitSet)
+                    $traitShapeIdToTrait.getKey(): #recursivelyParseNode($traitShapeIdToTrait.getValue().toNode(), "                    ")
+#end
+#end
+#end
+#else
+        member:
+#foreach($memberShape in $memberShapesCollection)
+            target: $memberShape.getTarget()
+#set($traitShapeIdToTraitSet = $memberShape.getAllTraits().entrySet())
+#if($traitShapeIdToTraitSet)
+            traits:
+#foreach($traitShapeIdToTrait in $traitShapeIdToTraitSet)
+                $traitShapeIdToTrait.getKey(): #recursivelyParseNode($traitShapeIdToTrait.getValue().toNode(), "                ")
+#end
+#end
+#end
+#end
+## set traits applied on the shape
+#set($traitShapeIdToTraitSet = $shape.getAllTraits().entrySet())
+#if($traitShapeIdToTraitSet)
+        traits:
+#foreach($traitShapeIdToTrait in $traitShapeIdToTraitSet)
+            $traitShapeIdToTrait.getKey(): #recursivelyParseNode($traitShapeIdToTrait.getValue().toNode(), "            ")
+#end
+#end
+#end
